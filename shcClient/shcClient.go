@@ -139,21 +139,21 @@ func (c *ShcApiClient) JsonRpcRequest(request shcJsonRpc.JsonRPC) (result shcJso
 	return rpc
 }
 
-func (c *ShcApiClient) Subscripe() {
+func (c *ShcApiClient) Subscribe() {
 	c.logger.Info("Subscribing to Polling")
 	result := c.JsonRpcRequest(shcJsonRpc.JsonRPC{Jsonrpc: "2.0", Method: "RE/subscribe", Params: []any{"com/bosch/sh/remote/*", nil}})
 	c.pollingId = result.Result
 	c.logger.Info("Subscription Polling ID: ", c.pollingId)
 }
 
-func (c *ShcApiClient) Unsubscripe() {
+func (c *ShcApiClient) Unsubscribe() {
 	c.logger.Info("Unsubscribing from Polling")
 	if c.pollingId != "" {
 		result := c.JsonRpcRequest(shcJsonRpc.JsonRPC{Jsonrpc: "2.0", Method: "RE/unsubscribe", Params: []any{c.pollingId}})
 		c.pollingId = ""
 		c.logger.Info("Unsubscribe Response: ", result)
 	} else {
-		c.logger.Warn("Cannot unsubscripe without Polling ID")
+		c.logger.Warn("Cannot unsubscribe without Polling ID")
 	}
 
 }
@@ -196,10 +196,10 @@ func (c *ShcApiClient) Poll(f func(event shcStructs.DeviceEvent)) {
 
 			if results.Error.Code != 0 {
 				c.logger.Error(results)
-				c.logger.Error("Somehow, there is an issue, during the polling. Will resubscripe.")
+				c.logger.Error("Somehow, there is an issue, during the polling. Will resubscribe.")
 				time.Sleep(5 * time.Second)
-				// resubscripe
-				c.Subscripe()
+				// resubscribe
+				c.Subscribe()
 			} else {
 				if len(results.Result) != 0 {
 					for _, event := range results.Result {
