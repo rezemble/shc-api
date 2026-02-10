@@ -16,6 +16,8 @@ type Device struct {
 	Service     []string `json:"deviceServiceIds"`
 	Room        string   `json:"roomId"`
 	DeviceModel string   `json:"deviceModel"`
+	Profile     string   `json:"profile"`
+	Status      string   `json:"status"`
 }
 
 type Thermostat struct {
